@@ -2,7 +2,36 @@ name : my-test
 on : push
 
 jobs:
- hello:
+ test:
   runs-on: ubuntu-latest
   steps:
-    - run: echo "Hello from Github Actions"
+    - uses: actions/checkout@v4
+    - run: ls
+    
+    - uses: actions/setup-pyhton@v5
+      with:
+        python-version:"3.12"
+    - run: python  --version
+    
+    - name: Install dependencies 
+     run: pip install -r requirements.txt
+    
+    - name: Run data quality experiments
+     run: python run_experiment.py
+    
+    - name pipeline tests
+      run pyhton -m robot --outputdir results/ci tests/pipeline.robot
+    
+    - name: Upload robot reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with: 
+       name: robot-reports
+       path: results/
+       
+      
+       
+      
+        
+        
+        
